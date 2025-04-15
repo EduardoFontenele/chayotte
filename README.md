@@ -55,7 +55,7 @@ Chayotte is organized into the following domain-based modules:
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/chayotte.git
+git clone https://github.com/EduardoFontenele/chayotte.git
 cd chayotte
 ```
 
@@ -97,4 +97,4 @@ src/main/java/com/chayotte/
 
 ## Contact
 
-For support or inquiries, please contact [your-email@example.com](mailto:your-email@example.com)
+For support or inquiries, please contact [eduardofonteneledev@gmail.com](mailto:eduardofonteneledev@gmail.com)
