@@ -30,8 +30,7 @@ public class CompanyStepDefinitions extends BaseStepDefinitions {
         var response = executePost("/api/v1/companies");
         var responseBody = response.getBody().asString();
 
-        assertEquals(201, response.getStatusCode(),
-                "Falha ao registrar empresa. Resposta: " + responseBody);
+        assertEquals(201, response.getStatusCode(), "Falha ao registrar empresa. Resposta: " + responseBody);
 
         var locationHeader = response.getHeader("Location");
         assertNotNull(locationHeader, "Header Location não encontrado na resposta");
@@ -79,7 +78,7 @@ public class CompanyStepDefinitions extends BaseStepDefinitions {
 
     @Then("provide a location header with the new company ID")
     public void provideLocationHeaderWithNewCompanyId() {
-        String locationHeader = response.getHeader("Location");
+        var locationHeader = response.getHeader("Location");
         assertNotNull(locationHeader);
 
         var parts = locationHeader.split("/");
@@ -99,12 +98,12 @@ public class CompanyStepDefinitions extends BaseStepDefinitions {
     public void returnValidationErrorsForMissingRequiredFields() {
         var jsonPath = response.jsonPath();
         assertNotNull(jsonPath.getList("errors"));
-        assert(jsonPath.getList("errors").size() > 0);
+        assert(!jsonPath.getList("errors").isEmpty());
     }
 
     @Then("return a validation error for the document number format")
     public void returnValidationErrorForDocumentNumberFormat() {
-        String responseBody = response.getBody().asString();
+        var responseBody = response.getBody().asString();
         assert(responseBody.contains(ErrorMessages.DOCUMENT_NUMBER_PATTERN));
     }
 
