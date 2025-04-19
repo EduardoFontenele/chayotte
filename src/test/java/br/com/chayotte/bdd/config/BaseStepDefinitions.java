@@ -3,6 +3,7 @@ package br.com.chayotte.bdd.config;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import jakarta.transaction.Transactional;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -10,6 +11,7 @@ import org.springframework.http.MediaType;
 import java.util.HashMap;
 import java.util.Map;
 
+@Transactional
 public abstract class BaseStepDefinitions {
     @LocalServerPort
     protected int port;
@@ -53,6 +55,13 @@ public abstract class BaseStepDefinitions {
         RestAssured.port = port;
     }
 
+    protected void clearAll() {
+        headers.clear();
+        queryParams.clear();
+        requestBody = null;
+        response = null;
+    }
+
     protected RequestSpecification givenConfig() {
         setupRestAssured();
 
@@ -84,4 +93,13 @@ public abstract class BaseStepDefinitions {
         return response;
     }
 
+    protected Response executePost(String path) {
+        response = givenConfig()
+                .when()
+                .post(path)
+                .then()
+                .extract()
+                .response();
+        return response;
+    }
 }

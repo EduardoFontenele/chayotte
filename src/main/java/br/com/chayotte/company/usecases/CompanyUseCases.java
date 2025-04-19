@@ -7,6 +7,8 @@ import br.com.chayotte.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 import static java.util.Objects.isNull;
 
 @Service
@@ -26,6 +28,9 @@ public class CompanyUseCases {
     }
 
     public CompanyResponseDto findCompanyById(Long id) {
-        return null;
+        var company = companyRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Company not found with id: " + id));
+
+        return companyMapper.toResponseDto(company);
     }
 }

@@ -1,6 +1,9 @@
 package br.com.chayotte.company.mapper;
 
+import br.com.chayotte.company.dto.AddressDto;
+import br.com.chayotte.company.dto.ContactInfoDto;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
+import br.com.chayotte.company.dto.company.CompanyResponseDto;
 import br.com.chayotte.company.model.Address;
 import br.com.chayotte.company.model.Company;
 import br.com.chayotte.company.model.ContactInfo;
@@ -49,5 +52,48 @@ public class CompanyMapper {
         }
 
         return company;
+    }
+
+    public CompanyResponseDto toResponseDto(Company entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        return new CompanyResponseDto(
+                entity.getId(),
+                entity.getName(),
+                entity.getTradeName(),
+                entity.getDocumentNumber(),
+                entity.getStateRegistration(),
+                entity.getMunicipalRegistration(),
+                entity.getType(),
+                entity.getSegment()
+        );
+    }
+
+    private AddressDto toAddressDto(Address entity) {
+        if (entity == null) return null;
+
+        return new AddressDto(
+                entity.getStreet(),
+                entity.getNumber(),
+                entity.getComplement(),
+                entity.getNeighborhood(),
+                entity.getCity(),
+                entity.getState(),
+                entity.getCountry(),
+                entity.getZipCode()
+        );
+    }
+
+    private ContactInfoDto toContactInfoDto(ContactInfo entity) {
+        if (entity == null) return null;
+
+        return new ContactInfoDto(
+                entity.getPhone(),
+                entity.getEmail(),
+                entity.getWebsite(),
+                entity.getContactName()
+        );
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,5 +29,11 @@ public class GlobalExceptionHandler {
     ResponseEntity<ErrorResponse> handler(HttpMessageNotReadableException ex) {
         var errors = List.of(ex.getMessage());
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), errors), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    ResponseEntity<ErrorResponse> handler(NoSuchElementException ex) {
+        var errors = List.of(ex.getMessage());
+        return new ResponseEntity<>(new ErrorResponse(HttpStatus.NOT_FOUND.value(), errors), HttpStatus.NOT_FOUND);
     }
 }
