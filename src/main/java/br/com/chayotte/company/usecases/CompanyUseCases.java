@@ -20,6 +20,7 @@ public class CompanyUseCases {
     public Long registerNewCompany(CompanyCreateDto dto) {
         var company = companyRepository.save(companyMapper.toEntity(dto));
 
+        // TODO: Create better exceptions for the API edge cases
         if(isNull(company.getId())) {
             throw new RuntimeException("Oh shit");
         }
