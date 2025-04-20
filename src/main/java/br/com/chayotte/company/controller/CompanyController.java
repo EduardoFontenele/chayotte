@@ -1,6 +1,6 @@
 package br.com.chayotte.company.controller;
 
-import br.com.chayotte.common.dto.ErrorResponse;
+import br.com.chayotte.common.dto.ValidationErrorResponse;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
 import br.com.chayotte.company.dto.company.CompanyResponseDto;
 import br.com.chayotte.company.usecases.CompanyUseCases;
@@ -45,7 +45,7 @@ public class CompanyController {
                     description = "Invalid company data provided",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class)
+                            schema = @Schema(implementation = ValidationErrorResponse.class)
                     )
             ),
     })
