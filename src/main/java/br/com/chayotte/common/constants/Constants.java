@@ -6,6 +6,7 @@ import lombok.experimental.UtilityClass;
 public class Constants {
     // Validation patterns
     public static final String CNPJ_PATTERN = "^\\d{14}$";
+    public static final String CPF_PATTERN = "^\\d{11}$";
     public static final String ZIPCODE_PATTERN = "^\\d{8}$";
     public static final String PHONE_PATTERN = "^\\+?[0-9]{10,14}$";
 

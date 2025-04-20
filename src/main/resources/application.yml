@@ -3,3 +3,12 @@ springdoc:
     path: /api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} [%thread] %5p %logger{36}: %msg | Line: %line%n"
+  level:
+    root: INFO
+    br.com.chayotte: INFO
+    org.springframework: INFO
+    org.hibernate: WARN
