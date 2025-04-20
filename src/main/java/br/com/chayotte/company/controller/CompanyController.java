@@ -1,5 +1,6 @@
 package br.com.chayotte.company.controller;
 
+import br.com.chayotte.common.dto.GenericErrorResponse;
 import br.com.chayotte.common.dto.ValidationErrorResponse;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
 import br.com.chayotte.company.dto.company.CompanyResponseDto;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,6 +60,28 @@ public class CompanyController {
                 .build();
     }
 
+    @Operation(
+            summary = "Find a company",
+            description = "Fetch a company by its ID"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found a company with the queried ID",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = CompanyResponseDto.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Company not found with the specified ID",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericErrorResponse.class)
+                    )
+            )
+    })
     @GetMapping("/{id}")
     ResponseEntity<CompanyResponseDto> findCompanyById(@PathVariable Long id) {
         return ResponseEntity.ok(companyUseCases.findCompanyById(id));

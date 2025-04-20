@@ -97,8 +97,8 @@ public class CompanyStepDefinitions extends BaseStepDefinitions {
     @Then("return validation errors for the missing required fields")
     public void returnValidationErrorsForMissingRequiredFields() {
         var jsonPath = response.jsonPath();
-        assertNotNull(jsonPath.getList("errors"));
-        assert(!jsonPath.getList("errors").isEmpty());
+        assertNotNull(jsonPath.getList("constraintViolations"));
+        assert(!jsonPath.getList("constraintViolations").isEmpty());
     }
 
     @Then("return a validation error for the document number format")
