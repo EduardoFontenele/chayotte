@@ -3,6 +3,7 @@ package br.com.chayotte.company.usecases;
 import br.com.chayotte.common.exception.ApiException;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
 import br.com.chayotte.company.dto.company.CompanyResponseDto;
+import br.com.chayotte.company.dto.company.CompanyUpdateDto;
 import br.com.chayotte.company.mapper.CompanyMapper;
 import br.com.chayotte.company.repository.CompanyRepository;
 import lombok.RequiredArgsConstructor;
@@ -41,4 +42,29 @@ public class CompanyUseCases {
                     return new NoSuchElementException("Company not found with id: " + id);
                 });
     }
+
+    public CompanyResponseDto updateCompany(Long id, CompanyUpdateDto dto) {
+        var existingCompany = companyRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Company not found with id: {}", id);
+                    return new NoSuchElementException("Company not found with id: " + id);
+                });
+
+        var updatedCompany = companyMapper.updateEntityFromDto(existingCompany, dto);
+        companyRepository.save(updatedCompany);
+
+        return companyMapper.toResponseDto(updatedCompany);
+    }
+
+    public void deleteCompany(Long id) {
+        var company = companyRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.info("Company not found with id: {}", id);
+                    return new NoSuchElementException("Company not found with id: " + id);
+                });
+
+        companyRepository.delete(company);
+        log.info("Company with id {} successfully deleted", id);
+    }
+
 }

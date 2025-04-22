@@ -1,5 +1,7 @@
 package br.com.chayotte.company.dto.company;
 
+import br.com.chayotte.common.constants.Constants;
+import br.com.chayotte.common.constants.ErrorMessages;
 import br.com.chayotte.company.dto.AddressDto;
 import br.com.chayotte.company.dto.ContactInfoDto;
 import br.com.chayotte.company.model.BusinessSegment;
@@ -10,16 +12,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 
 public record CompanyUpdateDto(
-        @Size(min = 2, max = 100, message = "Company name must be between 2 and 100 characters")
+        @Size(min = Constants.MIN_NAME_LENGTH, max = Constants.MAX_NAME_LENGTH,
+                message = ErrorMessages.COMPANY_NAME_SIZE)
         String name,
 
-        @Size(max = 100, message = "Trade name must not exceed 100 characters")
+        @Size(max = Constants.MAX_TRADE_NAME_LENGTH, message = ErrorMessages.TRADE_NAME_SIZE)
         String tradeName,
 
-        @Size(max = 30, message = "State registration must not exceed 30 characters")
+        @Size(max = Constants.MAX_REGISTRATION_LENGTH, message = ErrorMessages.STATE_REGISTRATION_SIZE)
         String stateRegistration,
 
-        @Size(max = 30, message = "Municipal registration must not exceed 30 characters")
+        @Size(max = Constants.MAX_REGISTRATION_LENGTH, message = ErrorMessages.MUNICIPAL_REGISTRATION_SIZE)
         String municipalRegistration,
 
         CompanyType type,
@@ -32,9 +35,7 @@ public record CompanyUpdateDto(
         @Valid
         ContactInfoDto contactInfo,
 
-        Boolean active,
-
-        @Email(message = "Invalid fiscal email format")
+        @Email(message = ErrorMessages.INVALID_FISCAL_EMAIL)
         String fiscalEmail,
 
         TaxRegime taxRegime
