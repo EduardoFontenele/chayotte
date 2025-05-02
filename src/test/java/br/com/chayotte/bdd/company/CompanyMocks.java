@@ -3,6 +3,7 @@ package br.com.chayotte.bdd.company;
 import br.com.chayotte.company.dto.AddressDto;
 import br.com.chayotte.company.dto.ContactInfoDto;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
+import br.com.chayotte.company.dto.company.CompanyUpdateDto;
 import br.com.chayotte.company.model.BusinessSegment;
 import br.com.chayotte.company.model.CompanyType;
 import br.com.chayotte.company.model.TaxRegime;
@@ -84,5 +85,63 @@ public final class CompanyMocks {
         return String.format("%08d%06d",
                 (int)(Math.random() * 100000000),
                 System.currentTimeMillis() % 1000000);
+    }
+
+    public static CompanyUpdateDto validCompanyUpdateDto() {
+        return new CompanyUpdateDto(
+                "Updated Company Name",
+                "Updated Trade Name",
+                "12345678901",
+                "987654321",
+                CompanyType.RETAIL,
+                BusinessSegment.TECHNOLOGY,
+                new AddressDto(
+                        "Updated Street",
+                        "123",
+                        "Updated Complement",
+                        "Updated Neighborhood",
+                        "Updated City",
+                        "SP",
+                        "Brazil",
+                        "12345678"
+                ),
+                new ContactInfoDto(
+                        "+5511987654321",
+                        "updated@example.com",
+                        "www.updated-example.com",
+                        "Updated Contact"
+                ),
+                "fiscal-updated@example.com",
+                TaxRegime.SIMPLES_NACIONAL
+        );
+    }
+
+    public static CompanyUpdateDto invalidCompanyUpdateDto() {
+        return new CompanyUpdateDto(
+                "A",
+                "Updated Trade Name",
+                "12345678901",
+                "987654321",
+                CompanyType.RETAIL,
+                BusinessSegment.TECHNOLOGY,
+                new AddressDto(
+                        "Updated Street",
+                        "123",
+                        "Updated Complement",
+                        "Updated Neighborhood",
+                        "Updated City",
+                        "SP",
+                        "Brazil",
+                        "12345678"
+                ),
+                new ContactInfoDto(
+                        "+5511987654321",
+                        "invalid-email",
+                        "www.updated-example.com",
+                        "Updated Contact"
+                ),
+                "invalid-fiscal-email",
+                TaxRegime.SIMPLES_NACIONAL
+        );
     }
 }

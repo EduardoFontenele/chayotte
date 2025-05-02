@@ -4,6 +4,7 @@ import br.com.chayotte.company.dto.AddressDto;
 import br.com.chayotte.company.dto.ContactInfoDto;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
 import br.com.chayotte.company.dto.company.CompanyResponseDto;
+import br.com.chayotte.company.dto.company.CompanyUpdateDto;
 import br.com.chayotte.company.model.Address;
 import br.com.chayotte.company.model.Company;
 import br.com.chayotte.company.model.ContactInfo;
@@ -95,5 +96,101 @@ public class CompanyMapper {
                 entity.getWebsite(),
                 entity.getContactName()
         );
+    }
+
+    public Company updateEntityFromDto(Company existingCompany, CompanyUpdateDto dto) {
+        if (dto.name() != null) {
+            existingCompany.setName(dto.name());
+        }
+
+        if (dto.tradeName() != null) {
+            existingCompany.setTradeName(dto.tradeName());
+        }
+
+        if (dto.stateRegistration() != null) {
+            existingCompany.setStateRegistration(dto.stateRegistration());
+        }
+
+        if (dto.municipalRegistration() != null) {
+            existingCompany.setMunicipalRegistration(dto.municipalRegistration());
+        }
+
+        if (dto.type() != null) {
+            existingCompany.setType(dto.type());
+        }
+
+        if (dto.segment() != null) {
+            existingCompany.setSegment(dto.segment());
+        }
+
+        if (dto.address() != null) {
+            updateAddress(existingCompany.getAddress(), dto.address());
+        }
+
+        if (dto.contactInfo() != null) {
+            updateContactInfo(existingCompany.getContactInfo(), dto.contactInfo());
+        }
+
+        if (dto.fiscalEmail() != null) {
+            existingCompany.setFiscalEmail(dto.fiscalEmail());
+        }
+
+        if (dto.taxRegime() != null) {
+            existingCompany.setTaxRegime(dto.taxRegime());
+        }
+
+        return existingCompany;
+    }
+
+    private void updateAddress(Address existingAddress, AddressDto addressDto) {
+        if (addressDto.street() != null) {
+            existingAddress.setStreet(addressDto.street());
+        }
+
+        if (addressDto.number() != null) {
+            existingAddress.setNumber(addressDto.number());
+        }
+
+        if (addressDto.complement() != null) {
+            existingAddress.setComplement(addressDto.complement());
+        }
+
+        if (addressDto.neighborhood() != null) {
+            existingAddress.setNeighborhood(addressDto.neighborhood());
+        }
+
+        if (addressDto.city() != null) {
+            existingAddress.setCity(addressDto.city());
+        }
+
+        if (addressDto.state() != null) {
+            existingAddress.setState(addressDto.state());
+        }
+
+        if (addressDto.country() != null) {
+            existingAddress.setCountry(addressDto.country());
+        }
+
+        if (addressDto.zipCode() != null) {
+            existingAddress.setZipCode(addressDto.zipCode());
+        }
+    }
+
+    private void updateContactInfo(ContactInfo existingContactInfo, ContactInfoDto contactInfoDto) {
+        if (contactInfoDto.phone() != null) {
+            existingContactInfo.setPhone(contactInfoDto.phone());
+        }
+
+        if (contactInfoDto.email() != null) {
+            existingContactInfo.setEmail(contactInfoDto.email());
+        }
+
+        if (contactInfoDto.website() != null) {
+            existingContactInfo.setWebsite(contactInfoDto.website());
+        }
+
+        if (contactInfoDto.contactName() != null) {
+            existingContactInfo.setContactName(contactInfoDto.contactName());
+        }
     }
 }
