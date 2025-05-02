@@ -123,5 +123,5 @@ public class CompanyStepDefinitions extends BaseStepDefinitions {
     @Then("the system should return a {int} Not Found status")
     public void systemShouldReturnNotFoundStatus(int statusCode) {
         assertEquals(statusCode, response.getStatusCode());
-    }z
+    }
 }
