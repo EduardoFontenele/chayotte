@@ -6,15 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -29,15 +30,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/v1/**").authenticated()
                         .anyRequest().permitAll()
                 )
-                .oauth2Login(oauth2 -> oauth2
-                        .userInfoEndpoint(userInfoEndpointConfig ->
-                                userInfoEndpointConfig.userAuthoritiesMapper(authoritiesMapper())))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> jwt
+                        .jwtAuthenticationConverter(jwtAuthenticationConverter())
                         .decoder(jwtDecoder())))
                 .build();
     }
@@ -47,42 +47,39 @@ public class SecurityConfig {
         return JwtDecoders.fromIssuerLocation(issuerUri);
     }
 
-    private GrantedAuthoritiesMapper authoritiesMapper() {
-        return authorities -> {
-            var mappedAuthorities = new HashSet<GrantedAuthority>();
+    @Bean
+    public JwtAuthenticationConverter jwtAuthenticationConverter() {
+        var jwtConverter = new JwtAuthenticationConverter();
+        jwtConverter.setJwtGrantedAuthoritiesConverter(jwt -> {
+            var authorities = new ArrayList<GrantedAuthority>();
 
-            authorities.forEach(authority -> {
-                mappedAuthorities.add(authority);
+            var realmAccess = jwt.getClaimAsMap("realm_access");
+            if (realmAccess != null) {
+                var roles = (List<String>) realmAccess.get("roles");
+                if (roles != null) {
+                    roles.forEach(role ->
+                            authorities.add(new SimpleGrantedAuthority("ROLE_" + role))
+                    );
+                }
+            }
 
-                if (authority instanceof OidcUserAuthority oidcUserAuthority) {
-                    var userInfo = oidcUserAuthority.getUserInfo();
-
-                    var realmAccess = userInfo.getClaimAsMap("realm_access");
-                    if (realmAccess != null) {
-                        var roles = (List<String>) realmAccess.get("roles");
-                        if (roles != null) {
-                            roles.forEach(role -> {
-                                mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                            });
-                        }
-                    }
-
-                    var resourceAccess = userInfo.getClaimAsMap("resource_access");
-                    if (resourceAccess != null) {
-                        var clientResource = (Map<String, Object>) resourceAccess.get("chayotte-app");
-                        if (clientResource != null) {
-                            var clientRoles = (List<String>) clientResource.get("roles");
-                            if (clientRoles != null) {
-                                clientRoles.forEach(role -> {
-                                    mappedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + role));
-                                });
-                            }
-                        }
+            // Mapear client roles
+            var resourceAccess = jwt.getClaimAsMap("resource_access");
+            if (resourceAccess != null) {
+                var clientResource = (Map<String, Object>) resourceAccess.get("chayotte-app");
+                if (clientResource != null) {
+                    var clientRoles = (List<String>) clientResource.get("roles");
+                    if (clientRoles != null) {
+                        clientRoles.forEach(role ->
+                                authorities.add(new SimpleGrantedAuthority("ROLE_" + role))
+                        );
                     }
                 }
-            });
+            }
 
-            return mappedAuthorities;
-        };
+            return authorities;
+        });
+
+        return jwtConverter;
     }
 }

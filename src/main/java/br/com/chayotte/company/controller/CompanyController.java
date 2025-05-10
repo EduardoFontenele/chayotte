@@ -13,8 +13,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +28,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static java.net.URI.create;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -31,6 +39,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 @RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
+@Slf4j
 public class CompanyController {
 
     private final CompanyUseCases companyUseCases;
@@ -149,5 +158,29 @@ public class CompanyController {
     ResponseEntity<Void> deleteCompany(@PathVariable Long id) {
         companyUseCases.deleteCompany(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/token-info")
+    ResponseEntity<Map<String, Object>> getTokenInfo(JwtAuthenticationToken authentication) {
+        Jwt jwt = authentication.getToken();
+
+        var tokenInfo = new LinkedHashMap<String, Object>();
+
+        tokenInfo.put("token_id", jwt.getId());
+        tokenInfo.put("subject", jwt.getSubject());
+        tokenInfo.put("issued_at", jwt.getIssuedAt());
+        tokenInfo.put("expires_at", jwt.getExpiresAt());
+        tokenInfo.put("issuer", jwt.getIssuer());
+        tokenInfo.put("audience", jwt.getAudience());
+
+        tokenInfo.put("headers", jwt.getHeaders());
+
+        tokenInfo.put("claims", jwt.getClaims());
+
+        tokenInfo.put("authorities", authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
+
+        return ResponseEntity.ok(tokenInfo);
     }
 }
