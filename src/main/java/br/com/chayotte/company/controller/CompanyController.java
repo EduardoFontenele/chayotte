@@ -159,28 +159,4 @@ public class CompanyController {
         companyUseCases.deleteCompany(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/token-info")
-    ResponseEntity<Map<String, Object>> getTokenInfo(JwtAuthenticationToken authentication) {
-        Jwt jwt = authentication.getToken();
-
-        var tokenInfo = new LinkedHashMap<String, Object>();
-
-        tokenInfo.put("token_id", jwt.getId());
-        tokenInfo.put("subject", jwt.getSubject());
-        tokenInfo.put("issued_at", jwt.getIssuedAt());
-        tokenInfo.put("expires_at", jwt.getExpiresAt());
-        tokenInfo.put("issuer", jwt.getIssuer());
-        tokenInfo.put("audience", jwt.getAudience());
-
-        tokenInfo.put("headers", jwt.getHeaders());
-
-        tokenInfo.put("claims", jwt.getClaims());
-
-        tokenInfo.put("authorities", authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
-
-        return ResponseEntity.ok(tokenInfo);
-    }
 }
