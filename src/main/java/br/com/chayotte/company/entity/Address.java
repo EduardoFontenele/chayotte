@@ -1,4 +1,4 @@
-package br.com.chayotte.company.model;
+package br.com.chayotte.company.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

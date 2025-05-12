@@ -1,5 +1,8 @@
-package br.com.chayotte.company.model;
+package br.com.chayotte.company.entity;
 
+import br.com.chayotte.user.entity.UserCompany;
+import br.com.chayotte.user.entity.UserCompanyRole;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -8,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -17,6 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -73,6 +79,19 @@ public class Company {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserCompany> userCompanies = new HashSet<>();
+
+    public void addUser(String userId, UserCompanyRole role) {
+        var userCompany = UserCompany.builder()
+                .userId(userId)
+                .company(this)
+                .role(role)
+                .build();
+        userCompanies.add(userCompany);
+    }
+
 
     @PrePersist
     protected void onCreate() {

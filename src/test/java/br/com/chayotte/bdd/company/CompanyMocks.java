@@ -4,9 +4,9 @@ import br.com.chayotte.company.dto.AddressDto;
 import br.com.chayotte.company.dto.ContactInfoDto;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
 import br.com.chayotte.company.dto.company.CompanyUpdateDto;
-import br.com.chayotte.company.model.BusinessSegment;
-import br.com.chayotte.company.model.CompanyType;
-import br.com.chayotte.company.model.TaxRegime;
+import br.com.chayotte.company.entity.BusinessSegment;
+import br.com.chayotte.company.entity.CompanyType;
+import br.com.chayotte.company.entity.TaxRegime;
 
 public final class CompanyMocks {
     private CompanyMocks() {}

@@ -1,4 +1,4 @@
-package br.com.chayotte.common.config;
+package br.com.chayotte.config;
 
 import br.com.chayotte.common.interceptor.RequestTimingInterceptor;
 import lombok.RequiredArgsConstructor;

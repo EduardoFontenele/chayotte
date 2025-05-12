@@ -5,9 +5,9 @@ import br.com.chayotte.company.dto.ContactInfoDto;
 import br.com.chayotte.company.dto.company.CompanyCreateDto;
 import br.com.chayotte.company.dto.company.CompanyResponseDto;
 import br.com.chayotte.company.dto.company.CompanyUpdateDto;
-import br.com.chayotte.company.model.Address;
-import br.com.chayotte.company.model.Company;
-import br.com.chayotte.company.model.ContactInfo;
+import br.com.chayotte.company.entity.Address;
+import br.com.chayotte.company.entity.Company;
+import br.com.chayotte.company.entity.ContactInfo;
 import org.springframework.stereotype.Component;
 
 @Component

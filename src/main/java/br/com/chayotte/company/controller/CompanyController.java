@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,16 +39,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/v1/companies")
+@RequestMapping("/api/companies")
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "Company Management", description = "APIs for company operations - requires authentication")
+@SecurityRequirement(name = "JWT")
 public class CompanyController {
 
     private final CompanyUseCases companyUseCases;
 
     @Operation(
             summary = "Register a new company",
-            description = "Creates a new company in the system based on the provided data"
+            description = "Creates a new company in the system based on the provided data. Requires authentication.",
+            security = { @SecurityRequirement(name = "JWT") }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -62,6 +67,16 @@ public class CompanyController {
                             schema = @Schema(implementation = ValidationErrorResponse.class)
                     )
             ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - authentication required",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden - insufficient permissions",
+                    content = @Content
+            )
     })
     @PostMapping
     ResponseEntity<Void> registerCompany(@RequestBody @Valid CompanyCreateDto companyCreateDto) {
@@ -74,7 +89,8 @@ public class CompanyController {
 
     @Operation(
             summary = "Find a company",
-            description = "Fetch a company by its ID"
+            description = "Fetch a company by its ID. Requires authentication.",
+            security = { @SecurityRequirement(name = "JWT") }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -84,6 +100,16 @@ public class CompanyController {
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
                             schema = @Schema(implementation = CompanyResponseDto.class)
                     )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - authentication required",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden - insufficient permissions",
+                    content = @Content
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -101,7 +127,8 @@ public class CompanyController {
 
     @Operation(
             summary = "Update a company",
-            description = "Updates an existing company based on the provided data"
+            description = "Updates an existing company based on the provided data. Requires authentication.",
+            security = { @SecurityRequirement(name = "JWT") }
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -121,6 +148,16 @@ public class CompanyController {
                     )
             ),
             @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - authentication required",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden - insufficient permissions",
+                    content = @Content
+            ),
+            @ApiResponse(
                     responseCode = "404",
                     description = "Company not found with the specified ID",
                     content = @Content(
@@ -137,12 +174,23 @@ public class CompanyController {
 
     @Operation(
             summary = "Delete a company",
-            description = "Deletes a company by its ID"
+            description = "Deletes a company by its ID. Requires authentication.",
+            security = { @SecurityRequirement(name = "JWT") }
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
                     description = "Company successfully deleted",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized - authentication required",
+                    content = @Content
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden - insufficient permissions",
                     content = @Content
             ),
             @ApiResponse(
